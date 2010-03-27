@@ -17,7 +17,7 @@ require 'game_states/level1'
 class Game < Chingu::Window
   def initialize
     super(Config::GAME_WIDTH, Config::GAME_HEIGHT, false)
-    self.caption = "Zig Zag - By Jesse Storimer"
+    self.caption = "Mapper - By Jesse Storimer"
     
     push_game_state(Level1)
   end
