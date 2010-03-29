@@ -30,7 +30,7 @@ class Level1 < Chingu::GameState
            
            # y = 4
            # 4 * 50 - 0 - 600 * 50
-           rock = Rock.create(:x => x * 50 + ROCK_PADDING, :y => (y/@height.to_f) * $window.height)
+           rock = Rock.create(:x => x * 60 + ROCK_PADDING, :y => (y/@height.to_f) * $window.height)
            # rock.hide!
            
            # Tiles::Rock
@@ -65,7 +65,7 @@ class Level1 < Chingu::GameState
 
      Rock.all.each do |rock|
        rock.x -= Config::SCROLL_SPEED
-       rock.show! if rock.visible?
+       # rock.show! if rock.visible?
      end
 
      Player.each_collision(Rock) do |player, rock|
