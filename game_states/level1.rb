@@ -1,16 +1,15 @@
-module Tiles
-  Rock = 1
-end
-
 class Level1 < Chingu::GameState
   FILE = "media/level1.txt"
   
-  ROCK_PADDING = 600
+  ROCK_PADDING = 300
+  ROCK_FACTOR = 52.0
 
+  has_trait :timer
+  attr_accessor :next_rock_x
+  
   def initialize
      super
      @player = Player.create(:x => Config::GAME_WIDTH/2, :y => Config::GAME_HEIGHT/2)
-     @tileset = Gosu::Image.load_tiles($window, "media/CptnRuby Tileset.png", 60, 60, true)
 
      self.input = { [:q, :escape] => :exit, :d => :debug }
      
@@ -19,18 +18,22 @@ class Level1 < Chingu::GameState
      @width = lines[0].size
      @width.times do |x|
        @height.times do |y|
+         rock_attribs = rock_attribs(x,y)
          case lines[y][x, 1]
-         when '#'
-           rock = Rock.create(:x => x * 52 + ROCK_PADDING, :y => (y/@height.to_f) * $window.height)
-           # rock.hide!
-         when '^'
-           UpFacingRock.create(:x => x * 52 + ROCK_PADDING, :y => (y/@height.to_f) * $window.height)
-         when 'v'
-           DownFacingRock.create(:x => x * 52 + ROCK_PADDING, :y => (y/@height.to_f) * $window.height)
+         when '#' then Rock.create(rock_attribs)
+         when '^' then UpFacingRock.create(rock_attribs)
+         when 'v' then DownFacingRock.create(rock_attribs)
+         when '>' then RightFacingRock.create(rock_attribs)
+         when '<' then LeftFacingRock.create(rock_attribs)
          end
        end
      end
      
+     self.next_rock_x = Config::GAME_WIDTH/ROCK_FACTOR
+   end
+   
+   def setup
+     every(1000) { generate_floating_rock }
    end
 
    def draw
@@ -43,6 +46,17 @@ class Level1 < Chingu::GameState
      push_game_state(Chingu::GameStates::Debug.new({}))
    end
    
+   def rock_attribs(x,y)
+     {:x => x * ROCK_FACTOR + ROCK_PADDING, :y => (y/@height.to_f) * $window.height}
+   end
+   
+   def generate_floating_rock
+     x = next_rock_x
+     y = rand(@height-1)
+
+     Rock.create(rock_attribs(x,y))
+   end
+   
    def update
      super
 
@@ -51,8 +65,8 @@ class Level1 < Chingu::GameState
        # rock.show! if rock.visible?
      end
      
-     # @player.colliding = false
-
+     self.next_rock_x += 1/ROCK_FACTOR
+     
      Chingu::Particle.destroy_if { |object| object.outside_window? || object.color.alpha == 0 }
    end
 end
