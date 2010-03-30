@@ -4,7 +4,7 @@ class Player < Chingu::GameObject
   
   attr_accessor :accel_rate, :dead
   
-  FALLING_RATE = 1.05
+  FALLING_RATE = 1
   RISING_RATE = 0.95
   
   SCALE_RATE = 0.001
@@ -15,7 +15,7 @@ class Player < Chingu::GameObject
     super(options)
     @image = Gosu::Image["blimp.png"]
     self.input = {:holding_up=>:rise}
-    self.max_velocity = 5
+    self.max_velocity = 9
 
     self.acceleration_y = 0.1
   end
