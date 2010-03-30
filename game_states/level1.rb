@@ -12,7 +12,7 @@ class Level1 < Chingu::GameState
      @player = Player.create(:x => Config::GAME_WIDTH/2, :y => Config::GAME_HEIGHT/2)
      @tileset = Gosu::Image.load_tiles($window, "media/CptnRuby Tileset.png", 60, 60, true)
 
-     self.input = { [:q, :escape] => :exit }
+     self.input = { [:q, :escape] => :exit, :d => :debug }
      
      lines = File.readlines(FILE).map { |line| line.chomp }
      @height = lines.size
@@ -21,8 +21,12 @@ class Level1 < Chingu::GameState
        @height.times do |y|
          case lines[y][x, 1]
          when '#'
-           rock = Rock.create(:x => x * 56 + ROCK_PADDING, :y => (y/@height.to_f) * $window.height)
+           rock = Rock.create(:x => x * 52 + ROCK_PADDING, :y => (y/@height.to_f) * $window.height)
            # rock.hide!
+         when '^'
+           UpFacingRock.create(:x => x * 52 + ROCK_PADDING, :y => (y/@height.to_f) * $window.height)
+         when 'v'
+           DownFacingRock.create(:x => x * 52 + ROCK_PADDING, :y => (y/@height.to_f) * $window.height)
          end
        end
      end
@@ -34,6 +38,10 @@ class Level1 < Chingu::GameState
 
      super
    end
+
+   def debug
+     push_game_state(Chingu::GameStates::Debug.new({}))
+   end
    
    def update
      super
@@ -43,14 +51,7 @@ class Level1 < Chingu::GameState
        # rock.show! if rock.visible?
      end
      
-     @player.colliding = false
-     Player.each_collision(Rock) do |player, rock|
-       puts 'changin x'
-       # @player.x -= Config::SCROLL_SPEED
-       @player.colliding = true
-       # @player.y
-       break
-     end
+     # @player.colliding = false
 
      Chingu::Particle.destroy_if { |object| object.outside_window? || object.color.alpha == 0 }
    end

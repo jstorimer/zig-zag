@@ -1,5 +1,4 @@
-class Rock < Chingu::GameObject
-  has_trait :bounding_box
+class Rock < Scrollable
   has_trait :effect
 
   def initialize(options = {})

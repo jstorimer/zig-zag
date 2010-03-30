@@ -2,7 +2,7 @@ class Player < Chingu::GameObject
   has_traits :collision_detection, :effect, :velocity
   has_trait :bounding_box
   
-  attr_accessor :colliding, :accel_rate
+  attr_accessor :accel_rate
   
   FALLING_RATE = 1.05
   RISING_RATE = 0.95
@@ -25,11 +25,14 @@ class Player < Chingu::GameObject
   end
   
   def update
-    puts @x
-    # puts colliding?
-    if colliding?
-      self.velocity_y = 0
-      return 
+    each_collision(Scrollable) do |player, rock|
+      if side_collision?(rock)
+        @x -= Config::SCROLL_SPEED
+      else
+        @x -= Config::SCROLL_SPEED/2  # dragging effect
+      end
+
+      @y = @previous_y
     end
     
     if !$window.button_down?(Gosu::KbUp)
@@ -43,4 +46,8 @@ class Player < Chingu::GameObject
   end
   
   def colliding?; colliding; end
+  
+  def side_collision?(scrollable)
+    @x < (scrollable.bounding_box.x - scrollable.bounding_box.width)
+  end
 end

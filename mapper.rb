@@ -9,10 +9,8 @@ require 'chingu'
 require 'config'
 require 'core_ext'
 
-require 'game_objects/rock'
-require 'game_objects/player'
-
-require 'game_states/level1'
+require_all 'game_objects'
+require_all 'game_states'
 
 class Game < Chingu::Window
   def initialize
