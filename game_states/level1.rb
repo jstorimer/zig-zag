@@ -42,7 +42,7 @@ class Level1 < Chingu::GameState
    end
 
    def draw
-     Gosu::Image["Space.png"].draw(0, 0, 0)
+#      Gosu::Image["Space.png"].draw(0, 0, 0)
 
      super
    end
