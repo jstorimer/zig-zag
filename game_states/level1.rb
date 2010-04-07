@@ -15,7 +15,6 @@ class Level1 < Chingu::GameState
 
      @parallax = Chingu::Parallax.create(:x => 0, :y => 0, :rotation_center => :top_left)
      @parallax.add_layer(:image => "mountains.png", :damping => 1, :repeat_x => true)
-     # @parallax.add_layer(:image => "Parallax-scroll-example-layer-1.png", :damping => 2)
 
      # Read in map
      lines = File.readlines(FILE).map { |line| line.chomp }
