@@ -49,6 +49,12 @@ class Player < Chingu::GameObject
   end
 
   def update
+    each_collision(Scrollable) do |player, rock|
+      @x -= Config::SCROLL_SPEED
+      @y = @previous_y
+      die!
+    end
+
     return if dead
 
     unless $window.button_down?(Gosu::KbLeft) || $window.button_down?(Gosu::KbRight)
@@ -57,17 +63,6 @@ class Player < Chingu::GameObject
 
     if @x <= bounding_box.width/2
       die!
-    end
-
-    each_collision(Scrollable) do |player, rock|
-#       if side_collision?(rock)
-#         @x -= Config::SCROLL_SPEED
-#       else
-#         @x -= Config::SCROLL_SPEED/2  # dragging effect
-#         @y = @previous_y
-#       end
-      die!
-#       scale(SCALE_RATE) # should only happen on grass collisisons, player needs to die on rock collisisons
     end
 
     if !$window.button_down?(Gosu::KbUp)
