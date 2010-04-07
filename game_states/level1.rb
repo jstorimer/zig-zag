@@ -37,7 +37,7 @@ class Level1 < Chingu::GameState
    end
 
    def setup
-     every(1000) { generate_floating_rock }
+     every(2000) { generate_floating_rock }
    end
 
    def draw

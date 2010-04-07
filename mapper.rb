@@ -11,15 +11,21 @@ require 'opengl'
 require 'config'
 require 'core_ext'
 
+require 'game_states/level1'
+require 'game_states/menu'
+
 require_all 'game_objects'
-require_all 'game_states'
+# require_all 'game_states'
 
 class Game < Chingu::Window
   def initialize
     super(Config::GAME_WIDTH, Config::GAME_HEIGHT, false)
     self.caption = "Mapper - By Jesse Storimer"
+
+    transitional_game_state(Chingu::GameStates::FadeTo, :speed => 10)
     
-    push_game_state(Level1)
+    # push_game_state(Level1)
+    push_game_state(Menu)
   end
 end
 
