@@ -1,5 +1,5 @@
 module Config
-  GAME_WIDTH = 800
+  GAME_WIDTH = 1000
   GAME_HEIGHT = 500
   
   SCROLL_SPEED = 10

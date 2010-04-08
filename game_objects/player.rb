@@ -49,7 +49,7 @@ class Player < Chingu::GameObject
   end
 
   def update
-    each_collision(Scrollable) do |player, rock|
+    each_collision(Rock) do |player, rock|
       @x -= Config::SCROLL_SPEED
       @y = @previous_y
       die!

@@ -5,7 +5,7 @@ class Level1 < Chingu::GameState
   ROCK_FACTOR = 52.0
 
   has_trait :timer
-  attr_accessor :next_rock_x
+  attr_accessor :next_rock_x, :next_block_x
 
   def initialize
      super
@@ -34,10 +34,14 @@ class Level1 < Chingu::GameState
      end
 
      self.next_rock_x = Config::GAME_WIDTH/ROCK_FACTOR
+     self.next_block_x = Config::GAME_WIDTH/ROCK_FACTOR
    end
 
    def setup
      every(2000) { generate_floating_rock }
+     after(1000) do
+       every(5000) { generate_colored_block }
+     end
    end
 
    def draw
@@ -60,13 +64,20 @@ class Level1 < Chingu::GameState
 
      Rock.create(rock_attribs(x,y))
    end
+   
+   def generate_colored_block
+     x = next_rock_x
+     y = rand(@height-1)
+puts "coming up at #{x} and #{y}"
+     ColoredBlock.create(rock_attribs(x,y))
+   end
 
    def update
      super
 
      @parallax.camera_x += 12
 
-     Rock.all.each do |rock|
+     Scrollable.all.each do |rock|
        rock.x -= Config::SCROLL_SPEED
        # rock.show! if rock.visible?
      end
