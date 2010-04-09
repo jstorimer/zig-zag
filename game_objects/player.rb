@@ -2,7 +2,7 @@ class Player < Chingu::GameObject
   has_traits :collision_detection, :effect, :velocity
   has_trait :bounding_box
 
-  attr_accessor :accel_rate, :dead
+  attr_accessor :accel_rate, :dead, :attached_blocks
 
   FALLING_RATE = 1
   RISING_RATE = 0.95
@@ -21,6 +21,8 @@ class Player < Chingu::GameObject
     self.max_velocity = 9
 
     self.acceleration_y = 0.1
+
+    self.attached_blocks = []
   end
 
   def rise
@@ -51,11 +53,18 @@ class Player < Chingu::GameObject
   def update
     each_collision(Rock) do |player, rock|
       @x -= Config::SCROLL_SPEED
-      @y = @previous_y
       die!
     end
 
-    return if dead
+    if dead
+      @y = @previous_y
+      return
+    end
+
+    each_collision(ColoredBlock) do |player, block|
+      attached_blocks << block
+      block.attach_to(player)
+    end
 
     unless $window.button_down?(Gosu::KbLeft) || $window.button_down?(Gosu::KbRight)
       rotate(-angle) #reset player
