@@ -23,7 +23,7 @@ class Player < Chingu::GameObject
       :released_left => :upright,
       :released_right => :upgright}
 
-    self.max_velocity = 5
+    self.max_velocity = 6
 
     self.acceleration_y = 0.1
 
@@ -32,7 +32,7 @@ class Player < Chingu::GameObject
 
   def rise
     return if dead
-    self.accel_rate *= 1.1
+    self.accel_rate *= 1.01
 
     self.acceleration_y = Gosu::offset_y(self.angle, self.accel_rate)*self.max_velocity
   end
@@ -71,6 +71,7 @@ class Player < Chingu::GameObject
 
     if dead
       @y = @previous_y
+      @x -= Config::SCROLL_SPEED
       return
     end
 
