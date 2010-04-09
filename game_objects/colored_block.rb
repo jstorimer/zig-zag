@@ -29,7 +29,8 @@ class ColoredBlock < Scrollable
 #       @@color_index = 0
 #     else
 #       @@color_index += 1
-#     end
+    #     end
+    #
   end
 
   def attach_to(attachable)
@@ -41,6 +42,19 @@ class ColoredBlock < Scrollable
     self.offset_x = @x - attachable.x
     self.offset_y = @y - attachable.y
     self.attachable = attachable
+  end
+
+  def tilt_back
+    @previous_x = @x
+    @previous_y = @y
+
+    @y = @attachable.y - @offset_x
+    @x = @attachable.x - @offset_y
+  end
+
+  def upright
+    @x = @attachable.x + @offset_x
+    @y = @attachable.y + @offset_y
   end
 
   def update

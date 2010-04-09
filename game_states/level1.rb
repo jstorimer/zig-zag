@@ -39,8 +39,8 @@ class Level1 < Chingu::GameState
    end
 
    def setup
-     every(3000) { generate_floating_rock }
-#      after(1000) do
+     every(1000) { generate_floating_rock }
+#      after(1p000) do
        every(5000) { generate_colored_block }
      #      end
 #      every(10000) { generate_colored_block }
@@ -59,8 +59,6 @@ class Level1 < Chingu::GameState
 
    def generate_perimeter
      nx = next_perim_x
-
-     puts next_perim_x
 
      # top row
      r = Rock.create(:x => nx, :y => 10)
@@ -108,7 +106,7 @@ class Level1 < Chingu::GameState
    def update
      super
 
-     @parallax.camera_x += 12
+     @parallax.camera_x += 6
 
      Scrollable.all.each do |rock|
        rock.x -= Config::SCROLL_SPEED if rock.scrolling?
@@ -118,7 +116,6 @@ class Level1 < Chingu::GameState
        block1.attach_to(block2)
      end
 
-     puts Rock.all.size
      ColoredBlock.each_collision(Rock) do |block, rock|
        return unless rock.visible?
        block.die
@@ -126,5 +123,6 @@ class Level1 < Chingu::GameState
 
      Chingu::Particle.destroy_if { |object| object.outside_window? || object.color.alpha == 0 }
      Rock.destroy_if { |object| object.x < 0 }
+     ColoredBlock.destroy_if { |object| object.x < 0 }
    end
 end

@@ -29,7 +29,7 @@ class Game < Chingu::Window
     super(Config::GAME_WIDTH, Config::GAME_HEIGHT, false)
     self.caption = "Mapper - By Jesse Storimer"
 
-    transitional_game_state(Chingu::GameStates::FadeTo, :speed => 10)
+#     transitional_game_state(Chingu::GameStates::FadeTo, :speed => 10)
 
     push_game_state(Level1)
 #     push_game_state(Menu)
