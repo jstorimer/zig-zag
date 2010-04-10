@@ -1,5 +1,5 @@
 class ColoredBlock < Scrollable
-  has_traits :effect, :collision_detection
+  has_traits :effect, :collision_detection, :timer
 
   COLORS = [Gosu::Color::RED, Gosu::Color::GREEN]
 
@@ -7,11 +7,16 @@ class ColoredBlock < Scrollable
 
   @@color_index = 0
 
-  state_machine :state, :initial => :unattached do
+  state_machine :cb_state, :initial => :unattached do
     after_transition :on => :die, :do => :fade
 
     event :attach do
       transition :unattached => :attached
+    end
+
+    event :unattach do
+      transition :attached => :unattached
+      transition :dead => :unattached
     end
 
     event :die do
@@ -24,8 +29,10 @@ class ColoredBlock < Scrollable
     super(options)
     @image = Gosu::Image.load_tiles($window, "media/CptnRuby Tileset.png", 60, 60, true)[1]
     @color = COLORS[@@color_index]
-    puts @@color_index
-    puts
+
+    HIGHER ZINDEX PLZ
+    MAKE SOME WALLS PLZ
+
     if @@color_index == COLORS.size-1
       @@color_index = 0
     else
@@ -34,8 +41,11 @@ class ColoredBlock < Scrollable
   end
 
   def fade
-    puts 'dend'
-    destroy
+    unattach!
+    start_scrolling!
+
+    every(20) { rotate(15); scale_out; fade_out }
+    after(500) { destroy }
   end
 
   def attach_to(attachable)
@@ -58,7 +68,7 @@ class ColoredBlock < Scrollable
       block1.attach_to(block2)
     end
 
-    die! if y > Config::BOTTOM_BOUNDARY || y < Config::TOP_BOUNDARY
+    die! if y > (Config::BOTTOM_BOUNDARY || y < Config::TOP_BOUNDARY) && !dead?
 
     super
   end
