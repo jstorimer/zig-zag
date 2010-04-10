@@ -1,82 +1,53 @@
 class Level1 < Chingu::GameState
-  FILE = "media/level1.txt"
-
   ROCK_PADDING = 300
   ROCK_FACTOR = 52.0
 
   has_trait :timer
-  attr_accessor :next_rock_x, :next_block_x, :next_perim_x
+  attr_accessor :next_rock_x, :next_block_x, :next_perim_x, :score
 
   def initialize
      super
      @player = Player.create(:x => Config::GAME_WIDTH/2, :y => Config::GAME_HEIGHT/2)
 
-     self.input = { [:q, :escape] => :exit, :d => :debug }
-
-     @parallax = Chingu::Parallax.create(:x => 0, :y => 0, :rotation_center => :top_left)
-     @parallax.add_layer(:image => "mountains.png", :damping => 1, :repeat_x => true)
-
-     # Read in map
-#      lines = File.readlines(FILE).map { |line| line.chomp }
-#      @height = lines.size
-#      @width = lines[0].size
-#      @width.times do |x|
-#        @height.times do |y|
-#          rock_attribs = rock_attribs(x,y)
-#          case lines[y][x, 1]
-#          when '#' then Rock.create(rock_attribs)
-#          when '^' then UpFacingRock.create(rock_attribs)
-#          when 'v' then DownFacingRock.create(rock_attribs)
-#          when '>' then RightFacingRock.create(rock_attribs)
-#          when '<' then LeftFacingRock.create(rock_attribs)
-#          end
-#        end
-#      end
+     self.input = { [:q, :escape] => :exit, :d => :debug, :r => :restart }
 
      self.next_rock_x = Config::GAME_WIDTH/ROCK_FACTOR
     self.next_block_x = Config::GAME_WIDTH/ROCK_FACTOR
     self.next_perim_x = Config::GAME_WIDTH
+    self.score = 0
    end
 
    def setup
-     every(1000) { generate_floating_rock }
-#      after(1p000) do
-       every(5000) { generate_colored_block }
-     #      end
-#      every(10000) { generate_colored_block }
-     every(Config::SCROLL_SPEED*250) { generate_perimeter }
+     init_parallax     
+
+     every(1500) { generate_floating_rock }
+     every(4000) { generate_colored_block }
    end
-
-   def draw
-#      Gosu::Image["Space.png"].draw(0, 0, 0)
-
-     super
+   
+   def init_parallax
+     Chingu::ParallaxLayer.send(:has_trait, :effect)
+     @top_parallax = Chingu::Parallax.create(:x => 0, :y => 10, :rotation_center => :top_left)
+     @top_parallax.add_layer(:image => "mountains.png", :damping => 1, :repeat_x => true)
+     
+     top = Chingu::ParallaxLayer.new(:repeat_x => true, :damping => 1)
+     top.image = Gosu::Image.load_tiles($window, "media/CptnRuby Tileset.png", 60, 60, true)[0]
+     top.angle = 180
+     top.zoom(0.2)
+     @top_parallax << top
+     
+     @bottom_parallax = Chingu::Parallax.create(:x => 0, :y => Config::GAME_HEIGHT-10)
+     bottom = Chingu::ParallaxLayer.new(:repeat_x => true, :damping => 1)
+     bottom.image = Gosu::Image.load_tiles($window, "media/CptnRuby Tileset.png", 60, 60, true)[0]
+     bottom.zoom(0.2)
+     @bottom_parallax << bottom
    end
 
    def debug
      push_game_state(Chingu::GameStates::Debug.new({}))
    end
-
-   def generate_perimeter
-     nx = next_perim_x
-
-     # top row
-     r = Rock.create(:x => nx, :y => 10)
-     24.times do |factor|
-       Rock.create(:x => nx + factor*r.bounding_box.width/2, :y => 10)
-     end
-
-     # bottom row
-     r=Rock.create(:x => nx, :y => Config::GAME_HEIGHT-10)
-     25.times do |factor|
-       Rock.create(:x => nx + factor*r.bounding_box.width/2, :y => Config::GAME_HEIGHT-10)
-     end
-   end
-
-   def next_perim_x
-     @next_perim_x.tap do
-       @next_perim_x += 1
-     end
+   
+   def restart
+     push_game_state(self.class)
    end
 
    def rock_attribs(x,y)
@@ -85,14 +56,18 @@ class Level1 < Chingu::GameState
 
    def generate_floating_rock
      x = next_rock_x
-     y = rand(Config::GAME_HEIGHT-20)
+     
+     min = 80
+     y = min + (rand(Config::BOTTOM_BOUNDARY - min))
 
      Rock.create(rock_attribs(x,y))
    end
 
    def generate_colored_block
      x = next_rock_x
-     y = rand(Config::GAME_HEIGHT-20)
+     
+     min = 80
+     y = min + rand(Config::BOTTOM_BOUNDARY - min)
 
      ColoredBlock.create(rock_attribs(x,y))
    end
@@ -106,19 +81,10 @@ class Level1 < Chingu::GameState
    def update
      super
 
-     @parallax.camera_x += 6
+     [@top_parallax, @bottom_parallax].each {|p| p.camera_x += 6}
 
      Scrollable.all.each do |rock|
        rock.x -= Config::SCROLL_SPEED if rock.scrolling?
-     end
-
-     ColoredBlock.each_collision(ColoredBlock) do |block1, block2|
-       block1.attach_to(block2)
-     end
-
-     ColoredBlock.each_collision(Rock) do |block, rock|
-       return unless rock.visible?
-       block.die
      end
 
      Chingu::Particle.destroy_if { |object| object.outside_window? || object.color.alpha == 0 }

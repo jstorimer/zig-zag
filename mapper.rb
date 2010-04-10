@@ -5,17 +5,11 @@ require 'chingu'
 require 'opengl'
 
 require 'config'
-require 'core_ext'
 
 require 'game_objects/scrollable'
 require 'game_objects/colored_block'
 require 'game_objects/rock'
-require 'game_objects/down_facing_rock'
-require 'game_objects/left_facing_rock'
-require 'game_objects/up_facing_rock'
-require 'game_objects/right_facing_rock'
 require 'game_objects/player'
-require 'game_objects/map'
 
 require 'game_states/level1'
 require 'game_states/menu'

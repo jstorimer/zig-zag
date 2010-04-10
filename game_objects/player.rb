@@ -2,7 +2,7 @@ class Player < Chingu::GameObject
   has_traits :collision_detection, :effect, :velocity
   has_trait :bounding_box
 
-  attr_accessor :accel_rate, :dead, :attached_blocks
+  attr_accessor :accel_rate, :dead, :attached_blocks, :score, :score_text
 
   FALLING_RATE = 1
   RISING_RATE = 1.1
@@ -28,8 +28,12 @@ class Player < Chingu::GameObject
     self.acceleration_y = 0.1
 
     self.attached_blocks = []
+    
+    self.score = 0
+    text_color = Gosu::Color.new(0xFF000000)
+    @score_text = Chingu::Text.create("Score: #{@score}", :x => 0, :y => 0, :size => 30, :color => text_color)
   end
-
+  
   def rise
     return if dead
     self.accel_rate *= 1.01
@@ -65,8 +69,8 @@ class Player < Chingu::GameObject
 
   def update
     each_collision(Rock) do |player, rock|
-      @x -= Config::SCROLL_SPEED
       die!
+      break
     end
 
     if dead
@@ -74,15 +78,17 @@ class Player < Chingu::GameObject
       @x -= Config::SCROLL_SPEED
       return
     end
+    
+    @score += 1
+    @score_text.text = "Score: #{@score}"
 
     each_collision(ColoredBlock) do |player, block|
       attached_blocks << block
       block.attach_to(player)
     end
 
-    if @x <= bounding_box.width/2
-      die!
-    end
+    die! if x < 0
+    die! if y > Config::BOTTOM_BOUNDARY || y < Config::TOP_BOUNDARY
 
     if !$window.button_down?(Gosu::KbUp)
       self.accel_rate = 0.1

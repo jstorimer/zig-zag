@@ -24,7 +24,7 @@ class ColoredBlock < Scrollable
     super(options)
     @image = Gosu::Image.load_tiles($window, "media/CptnRuby Tileset.png", 60, 60, true)[1]
     @color = COLORS[@@color_index]
-
+puts 'dd'
 #     if @@color_index == COLORS.size-1
 #       @@color_index = 0
 #     else
@@ -34,6 +34,7 @@ class ColoredBlock < Scrollable
   end
 
   def fade
+    puts 'dend'
     destroy
   end
 
@@ -68,6 +69,13 @@ class ColoredBlock < Scrollable
       @y = attachable.y + offset_y
     end
 
+    ColoredBlock.each_collision(ColoredBlock) do |block1, block2|
+      puts 'one'
+      block1.attach_to(block2)
+    end
+    
+    die! if y > Config::BOTTOM_BOUNDARY || y < Config::TOP_BOUNDARY
+    
     super
   end
 end
