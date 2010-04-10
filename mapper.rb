@@ -6,6 +6,8 @@ require 'opengl'
 
 require 'config'
 
+require 'lib/attachable'
+
 require 'game_objects/scrollable'
 require 'game_objects/colored_block'
 require 'game_objects/rock'

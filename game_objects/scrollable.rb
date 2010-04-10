@@ -1,7 +1,7 @@
 require 'state_machine'
 
 class Scrollable < Chingu::GameObject
-  has_trait :bounding_box
+  has_trait :bounding_box, :debug => true
   attr_accessor :state
 
   state_machine :status, :initial => :scrolling do

@@ -1,5 +1,6 @@
 class ColoredBlock < Scrollable
   has_traits :effect, :collision_detection
+  include Attachable
 
   COLORS = [Gosu::Color::RED, Gosu::Color::WHITE, Gosu::Color::GREEN]
 
@@ -24,7 +25,7 @@ class ColoredBlock < Scrollable
     super(options)
     @image = Gosu::Image.load_tiles($window, "media/CptnRuby Tileset.png", 60, 60, true)[1]
     @color = COLORS[@@color_index]
-puts 'dd'
+
 #     if @@color_index == COLORS.size-1
 #       @@color_index = 0
 #     else
@@ -44,24 +45,42 @@ puts 'dd'
     stop_scrolling
     attach
 
-    self.offset_x = @x - attachable.x
-    self.offset_y = @y - attachable.y
+    self.offset_x = bb.centerx - attachable.bb.centerx
+    self.offset_y = bb.centery - attachable.bb.centery
+#     self.offset_x = @x - attachable.x
+#     self.offset_y = @y - attachable.y
     self.attachable = attachable
   end
 
   def tilt_back
-    @y = attachable.y - offset_x
-    @x = attachable.x - offset_y
+    # only works if x > attach.x && y - attach.y
+    @x = attachable.bb.centerx - offset_y.abs - bb.width/2
+
+    if @y < attachable.y
+      @y = attachable.bb.centery - offset_x - bb.width/2
+    elsif @y >= attachable.y
+      @y = attachable.bb.centery - offset_x*2.5 - bb.width/2
+    end
+
   end
 
   def tilt_forward
+    # require 'ruby-debug';debugger
     @y = attachable.y + offset_y
     @x = attachable.x + offset_x
+
+    # attachments.each {|a| a.tilt_forward}
   end
 
   def upright
-    @x = @attachable.x + @offset_x
-    @y = @attachable.y + @offset_y
+#     @x = @attachable.x + @offset_x
+    #     @y = @attachable.y + @offset_y
+    #
+    #
+
+    @x = attachable.bb.centerx + offset_x - bb.width/2
+    @y = attachable.bb.centery + offset_y - bb.width/2
+    # attachments.each {|a| a.upright}
   end
 
   def update
@@ -70,12 +89,14 @@ puts 'dd'
     end
 
     ColoredBlock.each_collision(ColoredBlock) do |block1, block2|
-      puts 'one'
+      next if block1.attachments.include?(block2)
+
       block1.attach_to(block2)
+      block1.attachments << block2
     end
-    
+
     die! if y > Config::BOTTOM_BOUNDARY || y < Config::TOP_BOUNDARY
-    
+
     super
   end
 end

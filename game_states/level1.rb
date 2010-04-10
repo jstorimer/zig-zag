@@ -20,8 +20,10 @@ class Level1 < Chingu::GameState
    def setup
      init_parallax     
 
-     every(1500) { generate_floating_rock }
-     every(4000) { generate_colored_block }
+     # every(1500) { generate_floating_rock }
+     # every(4000) { generate_colored_block }
+     every(1000) { generate_colored_block }
+     
    end
    
    def init_parallax
