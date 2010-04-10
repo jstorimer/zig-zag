@@ -49,33 +49,17 @@ puts 'dd'
     self.attachable = attachable
   end
 
-  def tilt_back
-    @y = attachable.y - offset_x
-    @x = attachable.x - offset_y
-  end
-
-  def tilt_forward
-    @y = attachable.y + offset_y
-    @x = attachable.x + offset_x
-  end
-
-  def upright
-    @x = @attachable.x + @offset_x
-    @y = @attachable.y + @offset_y
-  end
-
   def update
     if attached?
       @y = attachable.y + offset_y
     end
 
     ColoredBlock.each_collision(ColoredBlock) do |block1, block2|
-      puts 'one'
       block1.attach_to(block2)
     end
-    
+
     die! if y > Config::BOTTOM_BOUNDARY || y < Config::TOP_BOUNDARY
-    
+
     super
   end
 end

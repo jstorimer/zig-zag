@@ -1,8 +1,10 @@
 class Player < Chingu::GameObject
   has_traits :collision_detection, :effect, :velocity
-  has_trait :bounding_box
+  has_trait :bounding_box, :debug => true
 
-  attr_accessor :accel_rate, :dead, :attached_blocks, :score, :score_text
+  include Attachable
+
+  attr_accessor :accel_rate, :dead, :score, :score_text
 
   FALLING_RATE = 1
   RISING_RATE = 1.1
@@ -17,46 +19,22 @@ class Player < Chingu::GameObject
     @image.retrofy
     self.scale = 2
 
-    self.input = { :holding_up => :rise,
-      :left => :tilt_back,
-      :right => :tilt_forward,
-      :released_left => :upright,
-      :released_right => :upright}
+    self.input = { :holding_up => :rise }
 
     self.max_velocity = 6
 
     self.acceleration_y = 0.1
 
-    self.attached_blocks = []
-    
     self.score = 0
     text_color = Gosu::Color.new(0xFF000000)
     @score_text = Chingu::Text.create("Score: #{@score}", :x => 0, :y => 0, :size => 30, :color => text_color)
   end
-  
+
   def rise
     return if dead
     self.accel_rate *= 1.01
 
     self.acceleration_y = Gosu::offset_y(self.angle, self.accel_rate)*self.max_velocity
-  end
-
-  def tilt_back
-    rotate(-90)
-
-    attached_blocks.each(&:tilt_back)
-  end
-
-  def tilt_forward
-    rotate(90)
-
-    attached_blocks.each(&:tilt_forward)
-  end
-
-  def upright
-    @angle = 0
-
-    attached_blocks.each(&:upright)
   end
 
   def die!
@@ -65,6 +43,8 @@ class Player < Chingu::GameObject
     rotate(180)
     self.velocity_y = 3
     self.dead = true
+
+    attachments.each(&:die)
   end
 
   def update
@@ -78,12 +58,12 @@ class Player < Chingu::GameObject
       @x -= Config::SCROLL_SPEED
       return
     end
-    
+
     @score += 1
     @score_text.text = "Score: #{@score}"
 
     each_collision(ColoredBlock) do |player, block|
-      attached_blocks << block
+      attachments << block
       block.attach_to(player)
     end
 
