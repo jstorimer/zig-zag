@@ -1,7 +1,7 @@
 class ColoredBlock < Scrollable
   has_traits :effect, :collision_detection
 
-  COLORS = [Gosu::Color::RED, Gosu::Color::WHITE, Gosu::Color::GREEN]
+  COLORS = [Gosu::Color::RED, Gosu::Color::GREEN]
 
   attr_accessor :color, :offset_x, :offset_y, :attachable
 
@@ -24,13 +24,13 @@ class ColoredBlock < Scrollable
     super(options)
     @image = Gosu::Image.load_tiles($window, "media/CptnRuby Tileset.png", 60, 60, true)[1]
     @color = COLORS[@@color_index]
-puts 'dd'
-#     if @@color_index == COLORS.size-1
-#       @@color_index = 0
-#     else
-#       @@color_index += 1
-    #     end
-    #
+    puts @@color_index
+    puts
+    if @@color_index == COLORS.size-1
+      @@color_index = 0
+    else
+      @@color_index += 1
+    end
   end
 
   def fade
