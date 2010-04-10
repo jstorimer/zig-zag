@@ -8,7 +8,7 @@ class ColoredBlock < Scrollable
   @@color_index = 0
 
   state_machine :state, :initial => :unattached do
-    after_transition :on => :die, :do => :destroy
+    after_transition :on => :die, :do => :fade
 
     event :attach do
       transition :unattached => :attached
@@ -33,6 +33,10 @@ class ColoredBlock < Scrollable
     #
   end
 
+  def fade
+    destroy
+  end
+
   def attach_to(attachable)
     return if attached?
 
@@ -45,11 +49,13 @@ class ColoredBlock < Scrollable
   end
 
   def tilt_back
-    @previous_x = @x
-    @previous_y = @y
+    @y = attachable.y - offset_x
+    @x = attachable.x - offset_y
+  end
 
-    @y = @attachable.y - @offset_x
-    @x = @attachable.x - @offset_y
+  def tilt_forward
+    @y = attachable.y + offset_y
+    @x = attachable.x + offset_x
   end
 
   def upright

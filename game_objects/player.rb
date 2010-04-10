@@ -21,7 +21,7 @@ class Player < Chingu::GameObject
       :left => :tilt_back,
       :right => :tilt_forward,
       :released_left => :upright,
-      :released_right => :upgright}
+      :released_right => :upright}
 
     self.max_velocity = 6
 
