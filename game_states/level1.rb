@@ -6,12 +6,12 @@ class Level1 < Chingu::GameState
   attr_accessor :next_rock_x, :next_block_x, :next_perim_x, :score
 
   def initialize
-     super
-     @player = Player.create(:x => Config::GAME_WIDTH/2, :y => Config::GAME_HEIGHT/2)
+    super
+    @player = Player.create(:x => Config::GAME_WIDTH/2, :y => Config::GAME_HEIGHT/2)
 
-     self.input = { [:q, :escape] => :exit, :d => :debug, :r => :restart }
+    self.input = { [:q, :escape] => :exit, :d => :debug, :r => :restart }
 
-     self.next_rock_x = Config::GAME_WIDTH/ROCK_FACTOR
+    self.next_rock_x = Config::GAME_WIDTH/ROCK_FACTOR
     self.next_block_x = Config::GAME_WIDTH/ROCK_FACTOR
     self.next_perim_x = Config::GAME_WIDTH
     self.score = 0

@@ -8,7 +8,7 @@ class ColoredBlock < Scrollable
   @@color_index = 0
 
   state_machine :cb_state, :initial => :unattached do
-    after_transition :on => :die, :do => :fade
+    after_transition :on => :die, :do => :start_scrolling!
 
     event :attach do
       transition :unattached => :attached
@@ -16,7 +16,6 @@ class ColoredBlock < Scrollable
 
     event :unattach do
       transition :attached => :unattached
-      transition :dead => :unattached
     end
 
     event :die do
@@ -26,26 +25,18 @@ class ColoredBlock < Scrollable
   end
 
   def initialize(options = {})
-    super(options)
+    super(options.merge(:zorder => 200))
+
     @image = Gosu::Image.load_tiles($window, "media/CptnRuby Tileset.png", 60, 60, true)[1]
     @color = COLORS[@@color_index]
 
-    HIGHER ZINDEX PLZ
-    MAKE SOME WALLS PLZ
+#     MAKE SOME WALLS PLZ
 
     if @@color_index == COLORS.size-1
       @@color_index = 0
     else
       @@color_index += 1
     end
-  end
-
-  def fade
-    unattach!
-    start_scrolling!
-
-    every(20) { rotate(15); scale_out; fade_out }
-    after(500) { destroy }
   end
 
   def attach_to(attachable)
@@ -64,11 +55,23 @@ class ColoredBlock < Scrollable
       @y = attachable.y + offset_y
     end
 
-    ColoredBlock.each_collision(ColoredBlock) do |block1, block2|
+    ColoredBlock.each_bounding_box_collision(ColoredBlock) do |block1, block2|
       block1.attach_to(block2)
     end
 
+    each_bounding_box_collision(Rock) do |block, rock|
+      block.die
+      break
+    end
+
     die! if y > (Config::BOTTOM_BOUNDARY || y < Config::TOP_BOUNDARY) && !dead?
+
+    if dead?
+      self.angle += 15
+      self.alpha -= 10
+      self.scale -= 1
+      destroy if self.alpha < 10
+    end
 
     super
   end
