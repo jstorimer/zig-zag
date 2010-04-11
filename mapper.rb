@@ -8,7 +8,9 @@ require 'config'
 require 'lib/attachable'
 
 require 'game_objects/scrollable'
+require 'game_objects/basic_colored_block'
 require 'game_objects/colored_block'
+require 'game_objects/block_wall'
 require 'game_objects/rock'
 require 'game_objects/player'
 
