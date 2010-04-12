@@ -19,7 +19,7 @@ class BasicColoredBlock < Scrollable
   def initialize(options = {})
     super(options.merge(:zorder => 200))
 
-    @image = Gosu::Image.load_tiles($window, "media/CptnRuby Tileset.png", 60, 60, true)[1]
+    @image = Gosu::Image.load_tiles($window, "media/CptnRuby Tileset.png", 15, 15, true)[1]
     @color = options[:color] || self.class.next_color
 
     @group = options[:group]

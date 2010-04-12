@@ -32,14 +32,14 @@ class Level1 < Chingu::GameState
      @top_parallax.add_layer(:image => "mountains.png", :damping => 1, :repeat_x => true)
 
      top = Chingu::ParallaxLayer.new(:repeat_x => true, :damping => 1)
-     top.image = Gosu::Image.load_tiles($window, "media/CptnRuby Tileset.png", 60, 60, true)[0]
+     top.image = Gosu::Image.load_tiles($window, "media/CptnRuby Tileset.png", 15, 15, true)[0]
      top.angle = 180
      top.zoom(0.2)
      @top_parallax << top
 
      @bottom_parallax = Chingu::Parallax.create(:x => 0, :y => Config::GAME_HEIGHT-10)
      bottom = Chingu::ParallaxLayer.new(:repeat_x => true, :damping => 1)
-     bottom.image = Gosu::Image.load_tiles($window, "media/CptnRuby Tileset.png", 60, 60, true)[0]
+     bottom.image = Gosu::Image.load_tiles($window, "media/CptnRuby Tileset.png", 15, 15, true)[0]
      bottom.zoom(0.2)
      @bottom_parallax << bottom
    end

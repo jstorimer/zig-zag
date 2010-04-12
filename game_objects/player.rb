@@ -20,7 +20,7 @@ class Player < Chingu::GameObject
     super(options)
     @image = Gosu::Image["blimp.png"]
     @image.retrofy
-    self.scale = 2
+    self.scale = 4
 
     self.input = { :holding_up => :rise, :space => :fire }
 
