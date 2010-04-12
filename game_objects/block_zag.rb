@@ -20,7 +20,7 @@ class BlockZag
       Rock.create(:x => @x, :y => Config::BOTTOM_BOUNDARY/HEIGHT_BLOCKS * current)
     end
 
-    HEIGHT_BLOCKS.downto(HEIGHT_BLOCKS/2 + 1) do |current|
+    HEIGHT_BLOCKS.downto(HEIGHT_BLOCKS/2 + 2) do |current|
       Rock.create(:x => @x + @width*WIDTH_BLOCKS+@width, :y => Config::BOTTOM_BOUNDARY/HEIGHT_BLOCKS * current)
     end
   end
