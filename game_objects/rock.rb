@@ -6,4 +6,8 @@ class Rock < Scrollable
     @image = Gosu::Image.load_tiles($window, "media/CptnRuby Tileset.png", 60, 60, true)[1]
     @image.retrofy
   end
+
+  def die
+    destroy
+  end
 end

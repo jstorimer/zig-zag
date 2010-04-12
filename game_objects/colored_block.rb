@@ -33,15 +33,18 @@ class ColoredBlock < BasicColoredBlock
     end
 
     ColoredBlock.each_bounding_box_collision(ColoredBlock) do |block1, block2|
+      next if block1.dead? || block2.dead?
       block1.attach_to(block2)
     end
 
     each_bounding_box_collision(Rock) do |block, rock|
-      die
+      block.die
+      rock.die
       break
     end
 
     die! if (y > Config::BOTTOM_BOUNDARY || y < Config::TOP_BOUNDARY) && !dead?
+    die if attachable && attachable.dead?
 
     super
   end

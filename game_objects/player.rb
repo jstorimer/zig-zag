@@ -4,7 +4,8 @@ class Player < Chingu::GameObject
 
   include Attachable
 
-  attr_accessor :accel_rate, :dead, :score, :score_text, :flames, :flames_count
+  attr_accessor :accel_rate, :dead, :score, :score_text, :flames, :flames_count, :flame_text
+  alias :dead? :dead
 
   FALLING_RATE = 1
   RISING_RATE = 1.1
@@ -23,7 +24,7 @@ class Player < Chingu::GameObject
 
     self.input = { :holding_up => :rise, :space => :fire }
 
-    self.max_velocity = 6
+    self.max_velocity = 5
 
     self.acceleration_y = 0.1
 
@@ -72,8 +73,6 @@ class Player < Chingu::GameObject
     self.dead = true
 
     attachments.each(&:die)
-
-    push_game_state(GameOver)
   end
 
   def update

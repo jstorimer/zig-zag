@@ -7,7 +7,7 @@ class Level1 < Chingu::GameState
 
   def initialize
     super
-    @player = Player.create(:x => Config::GAME_WIDTH/2, :y => Config::GAME_HEIGHT/2)
+    $player = Player.create(:x => Config::GAME_WIDTH/2, :y => Config::GAME_HEIGHT/2)
 
     self.input = { [:q, :escape] => :exit, :d => :debug, :r => :restart, :e => :edit }
 
@@ -20,10 +20,10 @@ class Level1 < Chingu::GameState
    def setup
      init_parallax
 
-     every(1700) { generate_floating_rock }
-     every(3900) { generate_colored_block }
+     every(2000) { generate_floating_rock }
+     every(3300) { generate_colored_block }
 
-     every(11000) { generate_blocks }
+     every(13200) { generate_blocks }
    end
 
    def init_parallax
@@ -112,5 +112,7 @@ class Level1 < Chingu::GameState
 
      Rock.destroy_if { |object| object.x < 0 }
      ColoredBlock.destroy_if { |object| object.x < 0 }
+
+     push_game_state(Chingu::GameStates::FadeTo.new(GameOver.new(:previous => self), :speed => 5)) if $player.dead
    end
 end

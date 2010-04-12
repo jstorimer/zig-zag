@@ -2,18 +2,10 @@ class BasicColoredBlock < Scrollable
   has_traits :effect, :collision_detection
   attr_accessor :group
 
-  COLORS = [Gosu::Color::RED, Gosu::Color::GREEN]
   attr_accessor :color
-  @@color_index = 0
 
   def self.next_color
-    COLORS[@@color_index].dup.tap do
-      if @@color_index == COLORS.size-1
-        @@color_index = 0
-      else
-        @@color_index += 1
-      end
-    end
+    Gosu::Color::GREEN.dup
   end
 
   state_machine :bcb_state, :initial => :alive do

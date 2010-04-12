@@ -2,7 +2,7 @@ class BlockZag
   attr_accessor :blocks, :color, :width
 
   HEIGHT_BLOCKS = 7
-  WIDTH_BLOCKS = 4
+  WIDTH_BLOCKS = 7
 
   def initialize(options = {})
     @color = ColoredBlock.next_color

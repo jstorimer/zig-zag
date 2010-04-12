@@ -6,6 +6,7 @@ require 'opengl'
 
 require 'config'
 require 'lib/attachable'
+require 'lib/pulsating_text'
 
 require 'game_objects/scrollable'
 require 'game_objects/basic_colored_block'
@@ -15,6 +16,7 @@ require 'game_objects/block_zag'
 require 'game_objects/rock'
 require 'game_objects/player'
 
+require 'game_states/game_over'
 require 'game_states/level1'
 require 'game_states/menu'
 
@@ -23,11 +25,8 @@ class Game < Chingu::Window
     super(Config::GAME_WIDTH, Config::GAME_HEIGHT, false)
     self.caption = "Mapper - By Jesse Storimer"
 
-    # for sexy fading
-    transitional_game_state(Chingu::GameStates::FadeTo, :speed => 10)
-
-    push_game_state(Level1)
-#     push_game_state(Menu)
+#     push_game_state(Level1)
+    push_game_state(Menu)
   end
 end
 
