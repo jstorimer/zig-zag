@@ -19,7 +19,7 @@ class BlockWall
 
   def create_blocks
     2.upto(6) do |current|
-      blocks << BasicColoredBlock.create(:x => @x, :y => Config::BOTTOM_BOUNDARY/TOTAL_BLOCKS * current, :color => @color, :wall => self)
+      blocks << BasicColoredBlock.create(:x => @x, :y => Config::BOTTOM_BOUNDARY/TOTAL_BLOCKS * current, :color => @color, :group => self)
     end
   end
 

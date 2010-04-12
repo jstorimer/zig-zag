@@ -11,22 +11,20 @@ require 'game_objects/scrollable'
 require 'game_objects/basic_colored_block'
 require 'game_objects/colored_block'
 require 'game_objects/block_wall'
+require 'game_objects/block_zag'
 require 'game_objects/rock'
 require 'game_objects/player'
 
 require 'game_states/level1'
 require 'game_states/menu'
 
-# require_all 'game_objects'
-# require_all 'game_states'
-
-
 class Game < Chingu::Window
   def initialize
     super(Config::GAME_WIDTH, Config::GAME_HEIGHT, false)
     self.caption = "Mapper - By Jesse Storimer"
 
-#     transitional_game_state(Chingu::GameStates::FadeTo, :speed => 10)
+    # for sexy fading
+    transitional_game_state(Chingu::GameStates::FadeTo, :speed => 10)
 
     push_game_state(Level1)
 #     push_game_state(Menu)

@@ -44,6 +44,7 @@ class Player < Chingu::GameObject
 
   def fire
     return unless flames_count < NUMBER_OF_FLAMES
+    return if flames?
 
     @flames_count += 1
     @flames = Chingu::Particle.create(:x => @x,
@@ -71,6 +72,8 @@ class Player < Chingu::GameObject
     self.dead = true
 
     attachments.each(&:die)
+
+    push_game_state(GameOver)
   end
 
   def update

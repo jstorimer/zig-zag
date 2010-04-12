@@ -1,6 +1,6 @@
 class BasicColoredBlock < Scrollable
   has_traits :effect, :collision_detection
-  attr_accessor :wall
+  attr_accessor :group
 
   COLORS = [Gosu::Color::RED, Gosu::Color::GREEN]
   attr_accessor :color
@@ -30,7 +30,7 @@ class BasicColoredBlock < Scrollable
     @image = Gosu::Image.load_tiles($window, "media/CptnRuby Tileset.png", 60, 60, true)[1]
     @color = options[:color] || self.class.next_color
 
-    @wall = options[:wall]
+    @group = options[:group]
   end
 
   def after_life
@@ -48,9 +48,9 @@ class BasicColoredBlock < Scrollable
     each_bounding_box_collision(ColoredBlock) do |bcb, cb|
       next unless bcb.color.to_s == cb.color.to_s
       next unless cb.attached?
-      next unless bcb.wall
+      next unless bcb.group
 
-      bcb.wall.die!
+      bcb.group.die!
       cb.die
     end
 
@@ -63,6 +63,6 @@ class BasicColoredBlock < Scrollable
       else
         player.die!
       end
-    end
+p    end
   end
 end

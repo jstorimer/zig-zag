@@ -9,7 +9,7 @@ class Level1 < Chingu::GameState
     super
     @player = Player.create(:x => Config::GAME_WIDTH/2, :y => Config::GAME_HEIGHT/2)
 
-    self.input = { [:q, :escape] => :exit, :d => :debug, :r => :restart }
+    self.input = { [:q, :escape] => :exit, :d => :debug, :r => :restart, :e => :edit }
 
     self.next_rock_x = Config::GAME_WIDTH/ROCK_FACTOR
     self.next_block_x = Config::GAME_WIDTH/ROCK_FACTOR
@@ -20,9 +20,10 @@ class Level1 < Chingu::GameState
    def setup
      init_parallax
 
-     every(1400) { generate_floating_rock }
-     every(3700) { generate_colored_block }
-     every(8000) { generate_block_wall }
+     every(1700) { generate_floating_rock }
+     every(3900) { generate_colored_block }
+
+     every(11000) { generate_blocks }
    end
 
    def init_parallax
@@ -47,6 +48,10 @@ class Level1 < Chingu::GameState
      push_game_state(Chingu::GameStates::Debug.new({}))
    end
 
+   def edit
+     push_game_state(Chingu::GameStates::Edit.new({}))
+   end
+
    def restart
      push_game_state(self.class)
    end
@@ -55,8 +60,21 @@ class Level1 < Chingu::GameState
      {:x => x * ROCK_FACTOR + ROCK_PADDING, :y => y}
    end
 
+   def generate_blocks
+     methods = [:generate_block_wall, :generate_block_zag]
+     @last ||= methods.first
+
+     send(@last).tap do
+       @last = methods.find { |m| m != @last }
+     end
+   end
+
    def generate_block_wall
      BlockWall.new(:x => next_rock_x * ROCK_FACTOR + ROCK_PADDING)
+   end
+
+   def generate_block_zag
+     BlockZag.new(:x => next_rock_x * ROCK_FACTOR + ROCK_PADDING)
    end
 
    def generate_floating_rock
