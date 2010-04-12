@@ -1,13 +1,13 @@
-class BlockWall < Scrollable
+class BlockWall
   attr_accessor :blocks, :color
 
   TOTAL_BLOCKS = 7
 
   def initialize(options = {})
-    super
-
     @color = ColoredBlock.next_color
 
+    @x = options[:x]
+    @blocks = []
     create_rocks
     create_blocks
   end
@@ -19,7 +19,11 @@ class BlockWall < Scrollable
 
   def create_blocks
     2.upto(6) do |current|
-      BasicColoredBlock.create(:x => @x, :y => Config::BOTTOM_BOUNDARY/TOTAL_BLOCKS * current, :color => @color)
+      blocks << BasicColoredBlock.create(:x => @x, :y => Config::BOTTOM_BOUNDARY/TOTAL_BLOCKS * current, :color => @color, :wall => self)
     end
+  end
+
+  def die!
+    blocks.each(&:die)
   end
 end

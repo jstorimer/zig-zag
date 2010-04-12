@@ -1,7 +1,7 @@
 class ColoredBlock < BasicColoredBlock
   has_traits :timer
 
-  attr_accessor :attachable
+  attr_accessor :attachable, :offset_y
 
   state_machine :cb_state, :initial => :unattached do
     event :attach do
@@ -19,7 +19,6 @@ class ColoredBlock < BasicColoredBlock
     stop_scrolling
     attach
 
-    self.offset_x = @x - attachable.x
     self.offset_y = @y - attachable.y
     self.attachable = attachable
   end
@@ -42,7 +41,7 @@ class ColoredBlock < BasicColoredBlock
       break
     end
 
-    die! if y > (Config::BOTTOM_BOUNDARY || y < Config::TOP_BOUNDARY) && !dead?
+    die! if (y > Config::BOTTOM_BOUNDARY || y < Config::TOP_BOUNDARY) && !dead?
 
     super
   end

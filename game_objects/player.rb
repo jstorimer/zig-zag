@@ -1,6 +1,6 @@
 class Player < Chingu::GameObject
   has_traits :collision_detection, :effect, :velocity
-  has_trait :bounding_box, :debug => true
+  has_trait :bounding_box
 
   include Attachable
 
