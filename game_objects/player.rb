@@ -18,9 +18,14 @@ class Player < Chingu::GameObject
 
   def initialize(options={})
     super(options)
-    @image = Gosu::Image["blimp.png"]
-    @image.retrofy
-    self.scale = 4
+    @image = if Config.retro?
+               im = Gosu::Image["blimp.png"]
+               im.retrofy
+               self.scale = 4
+               im
+             else
+               Gosu::Image["big-blimp.png"]
+             end
 
     self.input = { :holding_up => :rise, :space => :fire }
 
@@ -112,11 +117,5 @@ class Player < Chingu::GameObject
         @velocity_y = max_velocity
       end
     end
-  end
-
-  def colliding?; colliding; end
-
-  def side_collision?(scrollable)
-    @x < (scrollable.bounding_box.x - scrollable.bounding_box.width/2)
   end
 end

@@ -3,8 +3,14 @@ class Rock < Scrollable
 
   def initialize(options = {})
     super(options)
-    @image = Gosu::Image.load_tiles($window, "media/CptnRuby Tileset.png", 15, 15, true)[1]
-    @image.retrofy
+    @image = if Config.retro?
+               im = Gosu::Image.load_tiles($window, "media/CptnRuby Tileset.png", 15, 15, true)[1]
+               im.retrofy
+               self.scale = 4
+               im
+             else
+               Gosu::Image.load_tiles($window, "media/big-CptnRuby Tileset.png", 15, 15, true)[1]
+             end
   end
 
   def die

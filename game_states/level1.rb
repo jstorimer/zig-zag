@@ -113,6 +113,6 @@ class Level1 < Chingu::GameState
      Rock.destroy_if { |object| object.x < 0 }
      ColoredBlock.destroy_if { |object| object.x < 0 }
 
-     push_game_state(Chingu::GameStates::FadeTo.new(GameOver.new(:previous => self), :speed => 5)) if $player.dead
+     push_game_state(GameOver.new(:previous => self))  if $player.dead
    end
 end
