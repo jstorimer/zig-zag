@@ -1,10 +1,10 @@
 class Player < Chingu::GameObject
-  has_traits :collision_detection, :effect, :velocity
+  has_traits :collision_detection, :effect, :velocity, :timer
   has_trait :bounding_box
 
   include Attachable
 
-  attr_accessor :accel_rate, :dead, :score, :score_text
+  attr_accessor :accel_rate, :dead, :score, :score_text, :flames, :flames_count
 
   FALLING_RATE = 1
   RISING_RATE = 1.1
@@ -13,21 +13,26 @@ class Player < Chingu::GameObject
 
   MAX_ACCEL_RATE = 5
 
+  NUMBER_OF_FLAMES = 3
+
   def initialize(options={})
     super(options)
     @image = Gosu::Image["blimp.png"]
     @image.retrofy
     self.scale = 2
 
-    self.input = { :holding_up => :rise }
+    self.input = { :holding_up => :rise, :space => :fire }
 
     self.max_velocity = 6
 
     self.acceleration_y = 0.1
 
     self.score = 0
+    self.flames_count = 0
+
     text_color = Gosu::Color.new(0xFF000000)
     @score_text = Chingu::Text.create("Score: #{@score}", :x => 0, :y => 0, :size => 30, :color => text_color)
+    @flame_text = Chingu::Text.create("Flames remaining: #{NUMBER_OF_FLAMES-flames_count}", :x => 140, :y => 0, :size => 30, :color => text_color)
   end
 
   def rise
@@ -36,6 +41,27 @@ class Player < Chingu::GameObject
 
     self.acceleration_y = Gosu::offset_y(self.angle, self.accel_rate)*self.max_velocity
   end
+
+  def fire
+    return unless flames_count < NUMBER_OF_FLAMES
+
+    @flames_count += 1
+    @flames = Chingu::Particle.create(:x => @x,
+                                      :y => @y,
+                                      :image => Gosu::Image.load_tiles($window, "media/fireball.png", 32, 32, true)[0],
+                                      )
+
+    @flames.scale(6)
+
+    during(2000) do
+      @flames.y = @y
+      @flames.x = @x
+    end.then do
+      @flames.destroy
+      @flames = nil
+    end
+  end
+  alias :flames? :flames
 
   def die!
     return if dead
@@ -49,7 +75,7 @@ class Player < Chingu::GameObject
 
   def update
     each_collision(Rock) do |player, rock|
-      die!
+      player.die! unless player.flames?
       break
     end
 
@@ -61,6 +87,7 @@ class Player < Chingu::GameObject
 
     @score += 1
     @score_text.text = "Score: #{@score}"
+    @flame_text.text = "Flames remaining: #{NUMBER_OF_FLAMES-flames_count}"
 
     each_collision(ColoredBlock) do |player, block|
       attachments << block

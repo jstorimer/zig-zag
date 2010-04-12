@@ -92,7 +92,6 @@ class Level1 < Chingu::GameState
        rock.x -= Config::SCROLL_SPEED if rock.scrolling?
      end
 
-     Chingu::Particle.destroy_if { |object| object.outside_window? || object.color.alpha == 0 }
      Rock.destroy_if { |object| object.x < 0 }
      ColoredBlock.destroy_if { |object| object.x < 0 }
    end

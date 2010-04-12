@@ -58,7 +58,11 @@ class BasicColoredBlock < Scrollable
       next if bcb.is_a?(ColoredBlock)
       next if bcb.dead?
 
-      player.die!
+      if player.flames?
+        bcb.die!
+      else
+        player.die!
+      end
     end
   end
 end
