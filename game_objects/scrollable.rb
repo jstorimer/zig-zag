@@ -1,5 +1,3 @@
-require 'state_machine'
-
 class Scrollable < Chingu::GameObject
   has_traits :bounding_box, :effect
   attr_accessor :state

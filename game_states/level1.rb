@@ -3,18 +3,15 @@ class Level1 < Chingu::GameState
   ROCK_FACTOR = 52.0
 
   has_trait :timer
-  attr_accessor :next_rock_x, :next_block_x, :next_perim_x, :score
+  attr_accessor :next_rock_x
 
   def initialize
     super
+    
     $player = Player.create(:x => Config::GAME_WIDTH/2, :y => Config::GAME_HEIGHT/2)
-
     self.input = { [:q, :escape] => :exit, :d => :debug, :r => :restart, :e => :edit }
 
     self.next_rock_x = Config::GAME_WIDTH/ROCK_FACTOR
-    self.next_block_x = Config::GAME_WIDTH/ROCK_FACTOR
-    self.next_perim_x = Config::GAME_WIDTH
-    self.score = 0
    end
 
    def setup
@@ -35,12 +32,14 @@ class Level1 < Chingu::GameState
      top.image = Gosu::Image.load_tiles($window, "media/CptnRuby Tileset.png", 15, 15, true)[0]
      top.angle = 180
      top.zoom(0.2)
+     top.scale = 4
      @top_parallax << top
 
      @bottom_parallax = Chingu::Parallax.create(:x => 0, :y => Config::GAME_HEIGHT-10)
      bottom = Chingu::ParallaxLayer.new(:repeat_x => true, :damping => 1)
      bottom.image = Gosu::Image.load_tiles($window, "media/CptnRuby Tileset.png", 15, 15, true)[0]
      bottom.zoom(0.2)
+     bottom.scale = 4
      @bottom_parallax << bottom
    end
 

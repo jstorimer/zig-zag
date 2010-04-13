@@ -5,7 +5,7 @@ class BlockZag
   WIDTH_BLOCKS = 7
 
   def initialize(options = {})
-    @color = ColoredBlock.next_color
+    @color = Config::COLOR.dup
 
     @x = options[:x]
     @blocks = []

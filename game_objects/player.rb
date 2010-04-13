@@ -1,48 +1,40 @@
 class Player < Chingu::GameObject
-  has_traits :collision_detection, :effect, :velocity, :timer
-  has_trait :bounding_box
-
   include Attachable
+
+  has_traits :collision_detection, :effect, :velocity, :timer, :bounding_box
 
   attr_accessor :accel_rate, :dead, :score, :score_text, :flames, :flames_count, :flame_text
   alias :dead? :dead
 
   FALLING_RATE = 1
   RISING_RATE = 1.1
-
-  SCALE_RATE = 0.001
-
-  MAX_ACCEL_RATE = 5
-
   NUMBER_OF_FLAMES = 3
 
   def initialize(options={})
     super(options)
-    @image = if Config.retro?
-               im = Gosu::Image["blimp.png"]
-               im.retrofy
-               self.scale = 4
-               im
-             else
-               Gosu::Image["big-blimp.png"]
-             end
+    @image = Gosu::Image["blimp.png"]
+    @image.retrofy
+    self.scale = 4
 
     self.input = { :holding_up => :rise, :space => :fire }
 
     self.max_velocity = 5
-
     self.acceleration_y = 0.1
 
     self.score = 0
     self.flames_count = 0
 
-    text_color = Gosu::Color.new(0xFF000000)
-    @score_text = Chingu::Text.create("Score: #{@score}", :x => 0, :y => 0, :size => 30, :color => text_color)
-    @flame_text = Chingu::Text.create("Flames remaining: #{NUMBER_OF_FLAMES-flames_count}", :x => 140, :y => 0, :size => 30, :color => text_color)
+    init_text
+  end
+  
+  def init_text
+    text_color = Gosu::Color::WHITE
+    @score_text = Chingu::Text.create("Score: #{@score}", :x => 0, :y => 20, :size => 30, :color => text_color)
+    @flame_text = Chingu::Text.create("Flames remaining: #{NUMBER_OF_FLAMES-flames_count}", :x => 140, :y => 20, :size => 30, :color => text_color)
   end
 
   def rise
-    return if dead
+    return if dead?
     self.accel_rate *= 1.01
 
     self.acceleration_y = Gosu::offset_y(self.angle, self.accel_rate)*self.max_velocity
@@ -60,10 +52,10 @@ class Player < Chingu::GameObject
 
     @flames.scale(6)
 
-    during(2000) do
+    during(2000) {
       @flames.y = @y
       @flames.x = @x
-    end.then do
+    }.then do
       @flames.destroy
       @flames = nil
     end
@@ -71,7 +63,7 @@ class Player < Chingu::GameObject
   alias :flames? :flames
 
   def die!
-    return if dead
+    return if dead?
 
     rotate(180)
     self.velocity_y = 3
@@ -86,7 +78,7 @@ class Player < Chingu::GameObject
       break
     end
 
-    if dead
+    if dead?
       @y = @previous_y
       @x -= Config::SCROLL_SPEED
       return

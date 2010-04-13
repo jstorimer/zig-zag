@@ -6,13 +6,6 @@ module Config
   BOTTOM_BOUNDARY = GAME_HEIGHT - 80
 
   SCROLL_SPEED = 8
-
-  @@retro = true
-  def self.retro=(bool)
-    @@retro = bool
-  end
-
-  def self.retro?
-    !!@@retro
-  end
+  
+  COLOR = Gosu::Color::GREEN
 end

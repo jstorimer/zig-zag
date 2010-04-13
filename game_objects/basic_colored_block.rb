@@ -1,12 +1,6 @@
 class BasicColoredBlock < Scrollable
   has_traits :effect, :collision_detection
-  attr_accessor :group
-
-  attr_accessor :color
-
-  def self.next_color
-    Gosu::Color::GREEN.dup
-  end
+  attr_accessor :group, :color
 
   state_machine :bcb_state, :initial => :alive do
     after_transition :on => :die, :do => :after_life
@@ -19,17 +13,11 @@ class BasicColoredBlock < Scrollable
   def initialize(options = {})
     super(options.merge(:zorder => 200))
 
-    @image = if Config.retro?
-               im = Gosu::Image.load_tiles($window, "media/CptnRuby Tileset.png", 15, 15, true)[1]
-               im.retrofy
-               self.scale = 4
-               im
-             else
-               Gosu::Image.load_tiles($window, "media/big-CptnRuby Tileset.png", 15, 15, true)[1]
-             end
+    @image = Gosu::Image.load_tiles($window, "media/CptnRuby Tileset.png", 15, 15, true)[1]
+    @image.retrofy
+    self.scale = 4
 
-    @color = options[:color] || self.class.next_color
-
+    @color = Config::COLOR.dup
     @group = options[:group]
   end
 
@@ -40,7 +28,7 @@ class BasicColoredBlock < Scrollable
   def update
     if dead?
       self.angle += 15
-      self.alpha -= 15
+      self.alpha -= 10
       self.scale -= 1
       destroy if self.alpha < 10
     end
@@ -63,6 +51,6 @@ class BasicColoredBlock < Scrollable
       else
         player.die!
       end
-p    end
+    end
   end
 end

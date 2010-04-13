@@ -1,5 +1,5 @@
 class ColoredBlock < BasicColoredBlock
-  has_traits :timer
+  has_trait :timer
 
   attr_accessor :attachable, :offset_y
 
