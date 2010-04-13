@@ -26,7 +26,10 @@ class Level1 < Chingu::GameState
    def init_parallax
      Chingu::ParallaxLayer.send(:has_trait, :effect)
      @top_parallax = Chingu::Parallax.create(:x => 0, :y => 10, :rotation_center => :top_left)
-     @top_parallax.add_layer(:image => "mountains.png", :damping => 1, :repeat_x => true)
+     mountain = Chingu::ParallaxLayer.new(:repeat_x => true, :damping => 1)
+     mountain.image = Gosu::Image['mountains.png']
+     mountain.scale = 5
+     @top_parallax << mountain
 
      top = Chingu::ParallaxLayer.new(:repeat_x => true, :damping => 1)
      top.image = Gosu::Image.load_tiles($window, "media/CptnRuby Tileset.png", 15, 15, true)[0]
