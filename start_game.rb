@@ -19,6 +19,7 @@ require 'game_objects/player'
 require 'game_states/game_over'
 require 'game_states/level1'
 require 'game_states/menu'
+require 'game_states/instructions'
 
 class Game < Chingu::Window
   def initialize

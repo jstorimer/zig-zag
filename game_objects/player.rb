@@ -29,8 +29,8 @@ class Player < Chingu::GameObject
   
   def init_text
     text_color = Gosu::Color::WHITE
-    @score_text = Chingu::Text.create("Score: #{@score}", :x => 0, :y => 20, :size => 30, :color => text_color)
-    @flame_text = Chingu::Text.create("Flames remaining: #{NUMBER_OF_FLAMES-flames_count}", :x => 140, :y => 20, :size => 30, :color => text_color)
+    @score_text = Chingu::Text.create("Score: #{@score}", :x => 0, :y => 0, :size => 30, :color => text_color)
+    @flame_text = Chingu::Text.create("Flames remaining: #{NUMBER_OF_FLAMES-flames_count}", :x => 180, :y => 0, :size => 30, :color => text_color)
   end
 
   def rise

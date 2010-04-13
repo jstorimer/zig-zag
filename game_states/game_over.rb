@@ -8,9 +8,11 @@ class GameOver < Chingu::GameState
     self.input = { [:q, :escape] => :exit, :r => :restart}
 
     text_color = Gosu::Color::RED
-    Chingu::Text.create("Game Over", :x => Config::GAME_WIDTH/3, :y => Config::GAME_HEIGHT/3, :size => 80, :color => text_color, :align => :center)
-
-#     @score_text = Chingu::Text.create("Score: #{@score}", :x => Config::GAME_WIDTH/2, :y => Config::GAME_HEIGHT/3, :size => 40, :color => text_color)
+    got = Chingu::Text.create("Game Over", :x => Config::GAME_WIDTH/2, :y => Config::GAME_HEIGHT/3, :size => 80, :color => text_color, :align => :center)
+    got.rotation_center(:center_center)
+    
+    scoret = Chingu::Text.create("Score: #{$player.score}", :x => Config::GAME_WIDTH/2, :y => Config::GAME_HEIGHT/3 + 100, :size => 40, :color => text_color)
+    scoret.rotation_center(:center_center)
   end
 
   def restart

@@ -11,7 +11,7 @@ class BasicColoredBlock < Scrollable
   end
 
   def initialize(options = {})
-    super(options.merge(:zorder => 200))
+    super({:zorder => 200}.merge(options))
 
     @image = Gosu::Image.load_tiles($window, "media/CptnRuby Tileset.png", 15, 15, true)[1]
     @image.retrofy

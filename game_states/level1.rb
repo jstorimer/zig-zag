@@ -26,7 +26,7 @@ class Level1 < Chingu::GameState
    def init_parallax
      Chingu::ParallaxLayer.send(:has_trait, :effect)
      @top_parallax = Chingu::Parallax.create(:x => 0, :y => 10, :rotation_center => :top_left)
-     mountain = Chingu::ParallaxLayer.new(:repeat_x => true, :damping => 1)
+     mountain = Chingu::ParallaxLayer.new(:repeat_x => true, :damping => 2)
      mountain.image = Gosu::Image['mountains.png']
      mountain.scale = 5
      @top_parallax << mountain
@@ -106,7 +106,7 @@ class Level1 < Chingu::GameState
    def update
      super
 
-     [@top_parallax, @bottom_parallax].each {|p| p.camera_x += 6}
+     [@top_parallax, @bottom_parallax].each {|p| p.camera_x += 15}
 
      Scrollable.all.each do |rock|
        rock.x -= Config::SCROLL_SPEED if rock.scrolling?
