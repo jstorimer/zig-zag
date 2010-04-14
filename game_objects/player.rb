@@ -47,7 +47,7 @@ class Player < Chingu::GameObject
     @flames_count += 1
     @flames = Chingu::Particle.create(:x => @x,
                                       :y => @y,
-                                      :image => Gosu::Image.load_tiles($window, "media/fireball.png", 32, 32, true)[0],
+                                      :image => Gosu::Image.load_tiles($window, "media/fireball.png", 32, 32, true)[0]
                                       )
 
     @flames.scale(6)
