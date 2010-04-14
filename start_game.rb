@@ -1,6 +1,4 @@
-Dir['gems/*/lib'].each do |gem|
-  $:.unshift File.join(File.dirname(__FILE__),gem)
-end
+require 'rubygems'
 
 require 'state_machine'
 require 'chingu'
