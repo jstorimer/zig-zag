@@ -1,6 +1,8 @@
-require 'rubygems'
-require 'state_machine'
+Dir['gems/*/lib'].each do |gem|
+  $:.unshift File.join(File.dirname(__FILE__),gem)
+end
 
+require 'state_machine'
 require 'chingu'
 require 'opengl'
 
@@ -24,9 +26,8 @@ require 'game_states/instructions'
 class Game < Chingu::Window
   def initialize
     super(Config::GAME_WIDTH, Config::GAME_HEIGHT, false)
-    self.caption = "Mapper - By Jesse Storimer"
+    self.caption = "Zig Zag - By Jesse Storimer"
 
-#     push_game_state(Level1)
     push_game_state(Menu)
   end
 end
