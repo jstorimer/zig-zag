@@ -1,0 +1,3 @@
+[rvm use 1.9.1]
+gem install chingu ruby-opengl state_machine
+ruby start_game.rb
